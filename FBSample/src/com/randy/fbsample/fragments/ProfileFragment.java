@@ -1,7 +1,6 @@
 package com.randy.fbsample.fragments;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,16 +27,16 @@ import com.facebook.Request;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.model.GraphUser;
-import com.facebook.widget.ProfilePictureView;
 import com.randy.fbsample.FBSampleActivity;
 import com.randy.fbsample.FBSampleApplication;
 import com.randy.fbsample.R;
 import com.randy.fbsample.adapters.PhotoNewsListViewAdapter;
+import com.randy.fbsample.images.SmartImageView;
 
 public class ProfileFragment extends Fragment {
 	private static final String TAG = "ProfileFragment";
 	
-	private ProfilePictureView mUserProfileImage;
+	private SmartImageView mUserProfileImage;
 	private TextView mUserNameTextView;
 	private EditText mStatusEditText;
 	private Button mMyActionButton;
@@ -52,7 +51,7 @@ public class ProfileFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View profileFragmentView = inflater.inflate(R.layout.fragment_profile, container, false);
 		
-		mUserProfileImage = (ProfilePictureView) profileFragmentView.findViewById(R.id.user_profile_pic);
+		mUserProfileImage = (SmartImageView) profileFragmentView.findViewById(R.id.user_profile_pic);
 		mUserNameTextView = (TextView) profileFragmentView.findViewById(R.id.username_text_view);
 		mStatusEditText = (EditText) profileFragmentView.findViewById(R.id.user_status_edit_text);
 		mMyActionButton = (Button) profileFragmentView.findViewById(R.id.custom_action_btn);
@@ -188,7 +187,7 @@ public class ProfileFragment extends Fragment {
 	
 	private void loadMeUser() {
 		if (mMeUser != null) {
-			mUserProfileImage.setProfileId(mMeUser.getId());
+			mUserProfileImage.setImageUrl("https://graph.facebook.com/" + mMeUser.getId() + "/picture?type=normal");
 			mUserNameTextView.setText(mMeUser.getName());
 		}
 	}
