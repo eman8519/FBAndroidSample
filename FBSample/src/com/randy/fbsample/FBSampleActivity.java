@@ -1,5 +1,7 @@
 package com.randy.fbsample;
 
+import java.util.Arrays;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,17 +9,18 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 
 import com.facebook.Session;
+import com.facebook.Session.OpenRequest;
 import com.facebook.Session.StatusCallback;
+import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
 import com.randy.fbsample.fragments.LoginFragment;
 import com.randy.fbsample.fragments.ProfileFragment;
 
 public class FBSampleActivity extends FragmentActivity implements StatusCallback {
 	private static final String TAG = "FBSampleActivity";
-	
-	private static final String FB_APP_ID = "185936498221066";
 	
 	public static final int FRAG_LOGIN = 0;
 	public static final int FRAG_PROFILE = 1;
@@ -32,29 +35,40 @@ public class FBSampleActivity extends FragmentActivity implements StatusCallback
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fbsample);
 		
-		FBSampleApplication.setFBSampleActivity(this);
+		
+        
+		FBSampleApplication.setFBSampleActivity(this); //set static reference to activity
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
 		
-		if (Session.getActiveSession() == null || Session.getActiveSession().isClosed()) {
-			Session.openActiveSession(this, false, this);
+		Session.openActiveSession(this, false, this);
+		if(Session.getActiveSession() == null || Session.getActiveSession().getState() != SessionState.OPENED) {
 			goToNavFragment(FRAG_LOGIN);
-		} else {
-			goToNavFragment(FRAG_PROFILE);
 		}
 	}
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 	      super.onActivityResult(requestCode, resultCode, data);
-	      
 	      if (Session.getActiveSession() != null) {
 	    	  Session.getActiveSession().onActivityResult(this, requestCode, resultCode, data);
 	      }
-	  }
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		Session.getActiveSession().removeCallback(this);
+	}
+	
+	@Override
+	public void onDestroy() {
+		FBSampleApplication.setFBSampleActivity(null);
+		super.onDestroy();
+	}
 	
 	public void goToNavFragment(int fragId) {
 		if (fragId != mCurrentFragId) {

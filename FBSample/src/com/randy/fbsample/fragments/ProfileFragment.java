@@ -1,8 +1,12 @@
 package com.randy.fbsample.fragments;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -12,10 +16,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.HttpMethod;
 import com.facebook.Request;
@@ -26,6 +32,7 @@ import com.facebook.widget.ProfilePictureView;
 import com.randy.fbsample.FBSampleActivity;
 import com.randy.fbsample.FBSampleApplication;
 import com.randy.fbsample.R;
+import com.randy.fbsample.adapters.PhotoNewsListViewAdapter;
 
 public class ProfileFragment extends Fragment {
 	private static final String TAG = "ProfileFragment";
@@ -39,7 +46,7 @@ public class ProfileFragment extends Fragment {
 	
 	//Data
 	private GraphUser mMeUser;
-	private JSONArray mNewsFeedPhotoItems;
+	private ArrayList<JSONObject> mNewsFeedPhotoItems;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -75,6 +82,10 @@ public class ProfileFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				postStatus(Session.getActiveSession(), mStatusEditText.getText().toString());
+				
+				mStatusEditText.setText("");
+				InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(mStatusEditText.getWindowToken(), 0);
 			}
 		});
 		
@@ -122,9 +133,13 @@ public class ProfileFragment extends Fragment {
 			@Override
 			public void onCompleted(Response response) {
 				if (response.getError() == null) {
-					Log.d("Randy", "Status updated.");
+					Toast confirmToast = Toast.makeText(getActivity(), "Your status was updated.", Toast.LENGTH_LONG);
+					confirmToast.show();
 				} else {
 					Log.e(TAG, "Error in status update response - " + response.getError().getErrorMessage());
+					
+					Toast failToast = Toast.makeText(getActivity(), "Error in status update response - " + response.getError().getErrorMessage(), Toast.LENGTH_LONG);
+					failToast.show();
 				}
 			}
 		});
@@ -140,9 +155,12 @@ public class ProfileFragment extends Fragment {
         Request request = new Request(session, "/me/randy_recommends:submit", params, HttpMethod.POST, new Request.Callback(){         
         	public void onCompleted(Response response) {
         		if (response.getError() == null) {
-        			Log.d("Randy", "Randy Recommended.");   
+        			Toast confirmToast = Toast.makeText(getActivity(), "Your action was accepted.", Toast.LENGTH_LONG);
+					confirmToast.show();   
 	            } else {
 	            	Log.e(TAG, "Error in recommend response - " + response.getError().getErrorMessage());
+	            	Toast failToast = Toast.makeText(getActivity(), "Error in status update response - " + response.getError().getErrorMessage(), Toast.LENGTH_LONG);
+					failToast.show();
 	            }
         	}                  
         });
@@ -186,7 +204,13 @@ public class ProfileFragment extends Fragment {
         		if (response.getError() == null) {
         			try {
         				JSONObject responseJson = response.getGraphObject().getInnerJSONObject();
-        				mNewsFeedPhotoItems = responseJson.getJSONArray("data");
+        				JSONArray dataArray = responseJson.getJSONArray("data");
+        				
+        				mNewsFeedPhotoItems = new ArrayList<JSONObject>();
+        				
+        				for (int i = 0; i < dataArray.length(); i++) {
+        					mNewsFeedPhotoItems.add(dataArray.getJSONObject(i));
+        				}
         				
         				loadNewsFeedPhotos();
         			} catch (Exception e) {
@@ -201,8 +225,9 @@ public class ProfileFragment extends Fragment {
 	}
 	
 	private void loadNewsFeedPhotos() {
-		if (mNewsFeedPhotoItems != null) {
-			Log.d("Randy", "Length: " + mNewsFeedPhotoItems.length());
+		if (getActivity() != null && mNewsFeedPhotoItems != null) {
+			
+			mPhotoStoriesListView.setAdapter(new PhotoNewsListViewAdapter(getActivity(), mNewsFeedPhotoItems));
 		}
 	}
 }
