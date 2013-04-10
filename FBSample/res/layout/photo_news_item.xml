@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="186dp"
     android:background="#d1daec" >
 
     <RelativeLayout
@@ -12,14 +12,14 @@
 
         <android.support.v4.view.ViewPager
             android:id="@+id/photos_view_pager"
-            android:layout_width="120dp"
-            android:layout_height="80dp"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
             android:layout_centerVertical="true"
             android:background="#000000" />
 
         <com.viewpagerindicator.LinePageIndicator
             android:id="@+id/photos_page_indicator"
-            android:layout_width="120dp"
+            android:layout_width="200dp"
             android:layout_height="match_parent"
             android:layout_below="@+id/photos_view_pager" />
     </RelativeLayout>

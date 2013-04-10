@@ -51,6 +51,7 @@ public class PhotoNewsListViewAdapter extends ArrayAdapter<JSONObject> {
 		
 		photoViewPager.setAdapter(new PhotoViewPagerAdapter(getPhotosFromMedia(currentPhotoPost)));
 		photoPageIndicator.setViewPager(photoViewPager);
+		photoPageIndicator.setCurrentItem(0);
 		
 		if (photoViewPager.getAdapter().getCount() < 2) {
 			photoPageIndicator.setVisibility(View.GONE);
