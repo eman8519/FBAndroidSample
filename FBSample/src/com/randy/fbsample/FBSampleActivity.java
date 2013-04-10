@@ -31,6 +31,8 @@ public class FBSampleActivity extends FragmentActivity implements StatusCallback
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_fbsample);
+		
+		FBSampleApplication.setFBSampleActivity(this);
 	}
 	
 	@Override

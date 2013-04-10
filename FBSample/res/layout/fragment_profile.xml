@@ -1,9 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:facebook="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#0000ff" >
-    
+    android:background="#3b5998" >
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/top_status_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp" >
+
+        <com.facebook.widget.ProfilePictureView
+            android:id="@+id/user_profile_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:gravity="center_horizontal"
+            facebook:preset_size="normal" />
+
+        <LinearLayout
+            android:id="@+id/status_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/user_profile_pic"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/user_profile_pic"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/username_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/user_status_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:layout_marginTop="5dp"
+                android:background="#ffffff"
+                android:gravity="top|left"
+                android:hint="Enter status"
+                android:textColor="#000000"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/post_status_btn"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="2dp"
+                android:text="Post Status"
+                android:textSize="14sp"
+                android:enabled="false" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/custom_action_btn"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/user_profile_pic"
+            android:layout_marginTop="2dp"
+            android:text="My Action"
+            android:textSize="14sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/photo_news_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_status_container"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp" >
+
+        <TextView
+            android:id="@+id/photos_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Timeline Photos"
+            android:textColor="#000000"
+            android:textSize="18sp" />
+
+        <ListView
+            android:id="@+id/photo_stories_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/photos_label"
+            android:layout_marginTop="2dp"
+            android:background="#ffffff" />
+    </RelativeLayout>
+
+</RelativeLayout>
