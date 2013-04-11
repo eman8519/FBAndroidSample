@@ -19,9 +19,6 @@ public class LoginFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View loginFragmentView = inflater.inflate(R.layout.fragment_login, container, false);
 		
-		LoginButton authButton = (LoginButton) loginFragmentView.findViewById(R.id.login_button);
-		authButton.setPublishPermissions(Arrays.asList("read_stream", "publish_actions"));
-		
 		return loginFragmentView;
 	}
 	

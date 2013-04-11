@@ -1,6 +1,7 @@
 package com.randy.fbsample;
 
 import java.util.Arrays;
+import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,12 +10,12 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
+import android.widget.Toast;
 
+import com.facebook.Request;
+import com.facebook.Response;
 import com.facebook.Session;
-import com.facebook.Session.OpenRequest;
 import com.facebook.Session.StatusCallback;
-import com.facebook.SessionLoginBehavior;
 import com.facebook.SessionState;
 import com.randy.fbsample.fragments.LoginFragment;
 import com.randy.fbsample.fragments.ProfileFragment;
@@ -29,6 +30,8 @@ public class FBSampleActivity extends FragmentActivity implements StatusCallback
 	private final FragmentManager mFragmentManager = getSupportFragmentManager();
 	private Fragment mCurrentFragment;
 	private int mCurrentFragId = -1;
+	
+	private String mStatusToPost;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +104,12 @@ public class FBSampleActivity extends FragmentActivity implements StatusCallback
 	@Override
 	public void call(Session session, SessionState state, Exception exception) {
 		if (state == SessionState.OPENED) {
-			goToNavFragment(FRAG_PROFILE);
+			if (Session.getActiveSession().getPermissions().contains("publish_actions") || Session.getActiveSession().getPermissions().contains("read_stream")) {
+				goToNavFragment(FRAG_PROFILE);
+			} else {
+				Session.getActiveSession().requestNewPublishPermissions(new Session.NewPermissionsRequest(this, Arrays.asList("read_stream", "publish_actions")));
+				
+			}
 		} else if (state == SessionState.CLOSED) { //Close normally
 			goToNavFragment(FRAG_LOGIN);
 		} else if (state == SessionState.CLOSED_LOGIN_FAILED) { //close incorrectly
